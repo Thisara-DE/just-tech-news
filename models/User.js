@@ -1,3 +1,4 @@
+const bcrypt = require('bcrypt');
 const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../config/connection');
 
@@ -37,7 +38,7 @@ User.init(
             }
         },
         // define a password column
-        password:{
+        password: {
             type: DataTypes.STRING,
             allowNull: false,
             validate: {
@@ -47,6 +48,19 @@ User.init(
         }
     },
     {
+        hooks: {
+            // setup beforeCreate lifecycle "hook" functionality
+            async beforeCreate(newUserData) {
+                newUserData.password = await bcrypt.hash(newUserData.password, 10);
+                return newUserData;
+                
+            },
+            // setup beforeUpdate lifecycle "hook" functionality
+            async beforeUpdate(updatedUserData) {
+                updatedUserData.password = await bcrypt.hash(updatedUserData.password, 10);
+                return updatedUserData;
+            }
+        },
         // TABLE CONFIGURATION OPTIONS
     
         // pass in our imported sequelize connection (the direct connection to our database)
