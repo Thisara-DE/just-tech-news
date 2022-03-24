@@ -30,7 +30,7 @@ router.get('/', (req,res) => {
         .then(dbPostData => {
             // pass a single post object into the homepage template
             const posts = dbPostData.map(post => post.get({ plain: true }));            
-            res.render('homepage.handlebars', { posts });
+            res.render('homepage.handlebars', { posts, loggedIn: req.session.loggedIn });
         })
         .catch(err => {
             console.log(err);
@@ -76,7 +76,7 @@ router.get('/post/:id', (req,res) => {
         const post = dbPostData.get({ plain: true });
 
         // pass data to template
-        res.render('single-post.handlebars', { post });
+        res.render('single-post', { post, loggedIn: req.session.loggedIn });
     }).catch(err => {
         console.log(err);
         res.status(500).json(err);
