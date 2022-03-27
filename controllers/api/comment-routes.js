@@ -30,7 +30,7 @@ router.post('/', withAuth, (req, res) => {
 });
 
 router.delete('/:id', withAuth, (req, res) => {
-    Comment.findOne({
+    Comment.destroy({
         where: {
             comment_id: req.params.id
         }
